@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>魔术桌 · 个人博客</title>
+    <style>
+        /* ── 重置 & 基础 ── */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #121215;
+            --bg-card: #1a1a20;
+            --bg-card-hover: #22222a;
+            --text-primary: #ececf0;
+            --text-secondary: #a8a8b8;
+            --text-muted: #787888;
+            --accent: #dbb68c;
+            --accent-dim: #c4a07a;
+            --border: #2a2a32;
+            --border-light: #3a3a44;
+            --radius: 12px;
+            --max-width: 760px;
+            --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font);
+            background-color: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding: 2rem 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ── 容器 ── */
+        .container {
+            max-width: var(--max-width);
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        /* ── 头部 ── */
+        .header {
+            margin-bottom: 3.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .blog-name {
+            font-size: 2.6rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            color: var(--text-primary);
+            line-height: 1.1;
+        }
+
+        .blog-name .accent-char {
+            color: var(--accent);
+            font-weight: 300;
+            margin-right: 0.1em;
+        }
+
+        .header-divider {
+            width: 48px;
+            height: 2px;
+            background: var(--accent);
+            margin-top: 0.4rem;
+            border-radius: 2px;
+            opacity: 0.7;
+        }
+
+        /* ── 头部个人信息（新样式） ── */
+        .header-sub {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.3rem 0.9rem;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-top: 0.6rem;
+            width: 100%;
+        }
+
+        .header-sub .bio-intro {
+            font-weight: 300;
+            letter-spacing: 0.02em;
+            color: var(--text-primary);
+            margin-right: 0.1rem;
+        }
+
+        .header-sub .sep {
+            color: var(--text-muted);
+            opacity: 0.35;
+            font-weight: 200;
+            user-select: none;
+        }
+
+        .header-sub a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: color 0.25s ease, border-color 0.25s ease;
+            font-weight: 400;
+            font-size: 0.9rem;
+            padding: 0.1rem 0;
+        }
+
+        .header-sub a:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        /* ── 正文排版 ── */
+        .body-text {
+            font-size: 1.05rem;
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        .body-text p {
+            margin-bottom: 1.5rem;
+        }
+
+        .body-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .highlight-code {
+            display: inline-block;
+            background: rgba(219, 182, 140, 0.10);
+            color: var(--accent);
+            padding: 0.1rem 0.5rem;
+            border-radius: 4px;
+            font-family: "SF Mono", "Menlo", "Monaco", "Cascadia Code", "Consolas", monospace;
+            font-size: 0.9em;
+            border: 1px solid rgba(219, 182, 140, 0.15);
+        }
+
+        /* ── 专注卡片 ── */
+        .focus-section {
+            margin: 2.8rem 0 2.8rem 0;
+        }
+
+        .focus-heading {
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.02em;
+        }
+
+        .focus-heading span {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .focus-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+        }
+
+        .focus-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.6rem 1.5rem 1.5rem 1.5rem;
+            transition: background 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+            position: relative;
+        }
+
+        .focus-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-light);
+            transform: translateY(-2px);
+        }
+
+        .focus-card .card-number {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--accent);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 0.4rem;
+            display: block;
+        }
+
+        .focus-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.01em;
+        }
+
+        .focus-card h3 .emoji {
+            margin-right: 0.3rem;
+            font-style: normal;
+        }
+
+        .focus-card p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.65;
+            margin: 0;
+        }
+
+        .focus-card p .inline-code {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+            padding: 0.05rem 0.45rem;
+            border-radius: 3px;
+            font-family: "SF Mono", "Menlo", "Monaco", "Cascadia Code", "Consolas", monospace;
+            font-size: 0.85em;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        /* ── 结尾 ── */
+        .closing {
+            margin: 2.8rem 0 2.4rem 0;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .closing p {
+            font-size: 1.05rem;
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        .closing .invite {
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        /* ── 信条 ── */
+        .credo {
+            margin-top: 2.5rem;
+            padding: 1.8rem 2rem;
+            background: var(--bg-card);
+            border-left: 3px solid var(--accent);
+            border-radius: var(--radius);
+            position: relative;
+        }
+
+        .credo-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.6rem;
+        }
+
+        .credo p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin: 0;
+        }
+
+        .credo p .credo-highlight {
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        /* ── 底部 ── */
+        .footer {
+            margin-top: 3.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .footer .footer-copy {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            letter-spacing: 0.02em;
+        }
+
+        .footer .footer-copy a {
+            color: var(--text-muted);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s, color 0.2s;
+        }
+
+        .footer .footer-copy a:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .footer .footer-tag {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            opacity: 0.5;
+        }
+
+        /* ── 响应式 ── */
+        @media (max-width: 640px) {
+            body {
+                padding: 1.2rem 1rem;
+            }
+
+            .container {
+                padding: 1rem 0;
+            }
+
+            .blog-name {
+                font-size: 2rem;
+            }
+
+            .header-divider {
+                width: 36px;
+            }
+
+            .header-sub {
+                font-size: 0.85rem;
+                gap: 0.2rem 0.7rem;
+            }
+            .header-sub a {
+                font-size: 0.82rem;
+            }
+
+            .body-text {
+                font-size: 0.98rem;
+            }
+
+            .focus-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .focus-card {
+                padding: 1.4rem 1.2rem;
+            }
+
+            .focus-card h3 {
+                font-size: 1rem;
+            }
+
+            .focus-card p {
+                font-size: 0.9rem;
+            }
+
+            .closing p {
+                font-size: 0.98rem;
+            }
+
+            .credo {
+                padding: 1.4rem 1.2rem;
+            }
+
+            .credo p {
+                font-size: 0.92rem;
+            }
+
+            .footer {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.4rem;
+            }
+
+            .header-top {
+                gap: 0.5rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .blog-name {
+                font-size: 1.6rem;
+            }
+
+            .body-text {
+                font-size: 0.92rem;
+            }
+
+            .focus-card {
+                padding: 1.2rem 1rem;
+            }
+        }
+
+        /* ── 工具类 ── */
+        .mt-1 {
+            margin-top: 1rem;
+        }
+        .mt-2 {
+            margin-top: 2rem;
+        }
+        .mb-1 {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ═══ 头部（已修改为个人信息） ═══ -->
+        <header class="header">
+            <div class="header-top">
+                <span class="blog-name">
+                    <span class="accent-char">✦</span> 魔术桌 | MagicTable
+                </span>
+            </div>
+            <div class="header-divider"></div>
+            <div class="header-sub">
+                <!-- 简单的个人介绍 -->
+                <span class="highlight">「因为所以科学道理，原来如此皆有前提」</span>
+                <span class="sep">|</span>
+                <!-- 各平台链接（请将 # 替换为你的真实链接） -->
+                <a href="https://space.bilibili.com/218688595" target="_blank">Bilibili</a>
+                <span class="sep">·</span>
+                <a href="https://gitee.com/magictable" target="_blank">Gitee</a>
+                <span class="sep">·</span>
+                <a href="https://www.xiaohongshu.com/user/profile/686c5484000000001d00bb65" target="_blank">小红书</a>
+                <span class="sep">|</span>
+                <!-- 电子邮箱（请将 your@email.com 替换为你的真实邮箱） -->
+                <a href="13459588094@163.com">电子邮箱</a>
+            </div>
+        </header>
+
+        <!-- ═══ 正文 ═══ -->
+        <main>
+
+            <div class="body-text">
+
+                <p>
+                    我是一名追求极致掌控的<span class="highlight">自由职业者</span>。
+                </p>
+
+                <p>
+                    我对技术有着近乎偏执的追求，始终致力于摆脱对第三方的依赖，
+                    希望能成为一个<span class="highlight">「十全十美」</span>的独立个体。
+                    我偏好开源和免费的软件，但这无关成本，而是
+                    <span class="highlight">「开源」</span>精神的自由与透明让我着迷。
+                </p>
+
+                <p>
+                    作为一名 INTJ，我认为时间和精力是有限的资源。
+                    因此，相较于低效的语言沟通，我更倾向于用
+                    <span class="highlight-code">精准的代码</span> 和
+                    <span class="highlight-code">系统的笔记</span> 来传达思想。
+                </p>
+
+            </div>
+
+            <!-- ═══ 专注领域 ═══ -->
+            <section class="focus-section">
+                <div class="focus-heading">
+                    目前，我主要专注于 <span>两件事</span>：
+                </div>
+
+                <div class="focus-grid">
+
+                    <div class="focus-card">
+                        <span class="card-number">01</span>
+                        <h3><span class="emoji">🖥️</span> 运维家庭服务器</h3>
+                        <p>
+                            拒绝黑盒，拥抱 <span class="inline-code">Debian Linux</span> 原生环境，
+                            致力于为个人、家庭和小团队搭建
+                            <span class="highlight">「稳定、透明、可完全掌控」</span> 的数字花园。
+                            将数据掌握在自己手里，来应对未来不可预测的事故。
+                        </p>
+                    </div>
+
+                    <div class="focus-card">
+                        <span class="card-number">02</span>
+                        <h3><span class="emoji">🧠</span> 搭建第二大脑</h3>
+                        <p>
+                            深度使用 <span class="inline-code">Obsidian</span> 笔记软件，
+                            帮助个人和知识工作者构建清晰、可持续迭代的个人知识管理系统。
+                            告别信息焦虑，让知识真正产生价值。
+                        </p>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ═══ 结尾 ═══ -->
+            <div class="closing">
+                <p>
+                    如果你也在探索如何在这个数字化时代保持独立与清醒，
+                    欢迎用 <span class="invite">「技术」</span> 与我交流。
+                </p>
+            </div>
+
+            <!-- ═══ 信条 ═══ -->
+            <div class="credo">
+                <div class="credo-label">我的信条</div>
+                <p>
+                    追求极致的独立与掌控；<br />
+                    崇尚 <span class="credo-highlight">「开源」</span> 不仅是偏好，
+                    更是对自由与透明的认同；<br />
+                    与其冗长沟通，不如用 <span class="credo-highlight">代码</span> 和
+                    <span class="credo-highlight">笔记</span> 说话。
+                </p>
+            </div>
+
+        </main>
+
+        <!-- ═══ 底部 ═══ -->
+        <footer class="footer">
+            <div class="footer-copy">
+                &copy; 2026 <a href="#">魔术桌</a> · 用代码和笔记说话
+            </div>
+            <div class="footer-tag">✦ 独立 · 开源 · 掌控</div>
+        </footer>
+
+    </div>
+
+</body>
+</html>
